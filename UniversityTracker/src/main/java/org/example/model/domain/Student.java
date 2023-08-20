@@ -10,7 +10,6 @@ public class Student {
         this.id = id;
         this.age = age;
     }
-
     public String getName() {
         return name;
     }
