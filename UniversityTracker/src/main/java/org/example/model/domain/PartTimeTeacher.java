@@ -2,7 +2,6 @@ package org.example.model.domain;
 
 public class PartTimeTeacher extends Teacher {
     private int activeHoursPerWeek;
-
     public PartTimeTeacher(String name, double baseSalary, int experienceYears, int hoursPerWeek) {
         super(name, baseSalary, experienceYears);
         this.activeHoursPerWeek=hoursPerWeek;
@@ -13,5 +12,4 @@ public class PartTimeTeacher extends Teacher {
     public int getActiveHoursPerWeek() {
         return this.activeHoursPerWeek;
     }
-
 }

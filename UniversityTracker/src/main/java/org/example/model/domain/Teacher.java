@@ -13,6 +13,10 @@ public class Teacher {
         return this.baseSalary;
     }
     public int getExperienceYears() {
-        return experienceYears;
+        return this.experienceYears;
+    }
+
+    public String getName() {
+        return name;
     }
 }
