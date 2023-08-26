@@ -8,7 +8,7 @@ import org.example.model.repository.RepositoryInitializer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-
+import java.util.stream.IntStream;
 
 public class UniversityTracker implements IUniversityTracker {
     private IRepositoryInitializer repository;
@@ -17,7 +17,7 @@ public class UniversityTracker implements IUniversityTracker {
     private List<Subject> subjects;
 
     public UniversityTracker() {
-        repository= new RepositoryInitializer();
+        repository = new RepositoryInitializer();
         teachers = repository.getStoragedTeachers();
         students = repository.getStoragedStudents();
         subjects = repository.getStoragedSubjects();
@@ -25,31 +25,23 @@ public class UniversityTracker implements IUniversityTracker {
 
     public void printTeachers() {
         System.out.println("Teachers:");
-        for (Teacher teacher : teachers) {
-            System.out.println("    -> " + teacher);
-        }
+        teachers.forEach(teacher -> System.out.println("    -> " + teacher));
     }
 
     public void printClasses() {
         System.out.println("Classes:");
-        for (Subject subject : subjects) {
-            int index = subjects.indexOf(subject) + 1;
-            System.out.println(index + ". " + subject.getName());
-        }
+        IntStream.range(0, subjects.size())
+                .mapToObj(index -> (index + 1) + ". " + subjects.get(index).getName())
+                .forEach(System.out::println);
     }
-
 
     public void printClassData(int classIndex) {
-        if (classIndex >= 0 && classIndex < subjects.size()) {
-            Subject subject = subjects.get(classIndex);
-            System.out.println(subject);
-        }
+        subjects.stream()
+                .filter(subject -> subjects.indexOf(subject) == classIndex)
+                .findFirst()
+                .ifPresent(System.out::println);
     }
 
-    /**
-     * TODO: Agregar estudiante a una clase, no solo a la lista de students
-     * Hacer una especie de singleton con un final static para IDs de students.
-     */
     public void createNewStudent() {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter student name: ");

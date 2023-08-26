@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface IRepositoryInitializer {
-    public void initializeData();
     public List<Teacher> getStoragedTeachers();
     public List<Student> getStoragedStudents();
     public List<Subject> getStoragedSubjects();
