@@ -11,11 +11,19 @@ public class Student {
         this.age = age;
         this.id = this.singleID++;
     }
+
     public String getName() {
         return name;
     }
 
     public int getId() {
         return id;
+    }
+
+    @Override
+    public String toString() {
+        return "Student - ID: " + id +
+                ", Name: " + name +
+                ", Age: " + age;
     }
 }

@@ -1,7 +1,9 @@
 package org.example.controller.service;
 
 import org.example.controller.IUniversityTracker;
+import org.example.model.IRepositoryInitializer;
 import org.example.model.domain.*;
+import org.example.model.repository.RepositoryInitializer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,73 +11,38 @@ import java.util.Scanner;
 
 
 public class UniversityTracker implements IUniversityTracker {
+    private IRepositoryInitializer repository;
     private List<Teacher> teachers;
     private List<Student> students;
     private List<Subject> subjects;
 
     public UniversityTracker() {
-        teachers = new ArrayList<>();
-        students = new ArrayList<>();
-        subjects = new ArrayList<>();
+        repository= new RepositoryInitializer();
+        teachers = repository.getStoragedTeachers();
+        students = repository.getStoragedStudents();
+        subjects = repository.getStoragedSubjects();
     }
 
-    public void initializeData() {
-        teachers.add(new FullTimeTeacher("John Doe", 50000, 5));
-        teachers.add(new FullTimeTeacher("Jane Smith", 55000, 8));
-        teachers.add(new PartTimeTeacher("Michael Johnson", 30, 2, 10));
-        teachers.add(new PartTimeTeacher("Emily Brown", 25, 3, 8));
-
-        students.add(new Student("Alice", 20));
-        students.add(new Student("Bob", 21));
-        students.add(new Student("Charlie", 22));
-        students.add(new Student("Diana", 23));
-        students.add(new Student("Eva", 24));
-        students.add(new Student("Frank", 25));
-
-        Subject subject1 = new Subject("Math", "Room 101", teachers.get(0));
-        Subject subject2 = new Subject("English", "Room 102", teachers.get(1));
-        Subject subject3 = new Subject("Science", "Room 103", teachers.get(2));
-        Subject subject4 = new Subject("History", "Room 104", teachers.get(3));
-
-        subject1.enrollStudent(students.get(0));
-        subject1.enrollStudent(students.get(1));
-        subject2.enrollStudent(students.get(2));
-        subject2.enrollStudent(students.get(3));
-        subject3.enrollStudent(students.get(4));
-        subject4.enrollStudent(students.get(5));
-
-        subjects.add(subject1);
-        subjects.add(subject2);
-        subjects.add(subject3);
-        subjects.add(subject4);
-    }
-
-    public void printProfessors() {
-        System.out.println("Professors:");
+    public void printTeachers() {
+        System.out.println("Teachers:");
         for (Teacher teacher : teachers) {
-            System.out.println("    ->"+teacher.getClass().getSimpleName() + " - " + teacher.getName());
+            System.out.println("    -> " + teacher);
         }
     }
 
     public void printClasses() {
         System.out.println("Classes:");
-        int i = 1;
         for (Subject subject : subjects) {
-            System.out.println(i + ". " + subject.getName());
-            i++;
+            int index = subjects.indexOf(subject) + 1;
+            System.out.println(index + ". " + subject.getName());
         }
     }
+
 
     public void printClassData(int classIndex) {
         if (classIndex >= 0 && classIndex < subjects.size()) {
             Subject subject = subjects.get(classIndex);
-            System.out.println("  -> Class: " + subject.getName());
-            System.out.println("    -> Classroom: " + subject.getClassroom());
-            System.out.println("    -> Teacher: " + subject.getTeacher().getName());
-            System.out.println("    -> Students:");
-            for (Student student : subject.getStudents()) {
-                System.out.println("        -> "+student.getName());
-            }
+            System.out.println(subject);
         }
     }
 
@@ -115,7 +82,7 @@ public class UniversityTracker implements IUniversityTracker {
         String classroom = scanner.nextLine();
 
         System.out.println("Teachers:");
-        printProfessors();
+        this.printTeachers();
         System.out.print("Enter teacher index: ");
         int teacherIndex = scanner.nextInt();
 
@@ -144,16 +111,9 @@ public class UniversityTracker implements IUniversityTracker {
 
     public void listClassesForStudent(int studentId) {
         System.out.println("Classes for Student with ID " + studentId + ":");
-        for (Subject subject : subjects) {
-            for (Student student : subject.getStudents()) {
-                if (student.getId() == studentId) {
-                    System.out.println(subject.getName());
-                    break;
-                }
-            }
-        }
+        subjects.stream()
+                .filter(subject -> subject.getStudents().stream()
+                        .anyMatch(student -> student.getId() == studentId))
+                .forEach(subject -> System.out.println(subject.getName()));
     }
-
-
-
 }

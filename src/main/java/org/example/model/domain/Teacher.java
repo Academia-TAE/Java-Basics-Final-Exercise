@@ -12,7 +12,7 @@ public abstract class Teacher {
         this.salary = baseSalary;
         this.experienceYears = experienceYears;
     }
-    public double getBaseSalary() {
+    public double getSalary() {
         return this.salary;
     }
     public int getExperienceYears() {
@@ -22,5 +22,6 @@ public abstract class Teacher {
     public String getName() {
         return name;
     }
-    public abstract double calculateSalary(); // Método abstracto sin implementación
+    public abstract double calculateSalary();
+    public abstract String toString();
 }

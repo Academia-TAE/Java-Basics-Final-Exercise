@@ -8,6 +8,13 @@ public class FullTimeTeacher extends Teacher {
 
     @Override
     public double calculateSalary() {
-        return super.getBaseSalary() * (1 + 0.1 * super.getExperienceYears());
+        return super.getSalary() * (1 + 0.1 * super.getExperienceYears());
+    }
+
+    @Override
+    public String toString() {
+        return "Full-Time Teacher - Name: " + super.getName() +
+                ", Experience Years: " + super.getExperienceYears() +
+                ", Total Salary: " + super.getSalary();
     }
 }

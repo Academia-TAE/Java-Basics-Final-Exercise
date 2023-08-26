@@ -1,9 +1,8 @@
 package org.example.controller;
 
 public interface IUniversityTracker {
-    void initializeData();
 
-    void printProfessors();
+    void printTeachers();
 
     void printClasses();
 
