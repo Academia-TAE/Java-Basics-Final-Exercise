@@ -1,59 +1,57 @@
 package org.example.view.controller;
 
+import org.example.controller.IUniversityTracker;
+import org.example.controller.service.UniversityTracker;
 import org.example.view.IMain;
 
 import java.util.Scanner;
 
 public class Main implements IMain {
+    IUniversityTracker tracker = new UniversityTracker();
     public void runApplication() {
+        tracker.initializeData();
 
         Scanner scanner = new Scanner(System.in);
-
-
-        // Inicialización de profesores, estudiantes y clases (según el enunciado)
-
         boolean exit = false;
         while (!exit) {
-            System.out.println("Menú:");
-            System.out.println("a. Imprimir todos los profesores con sus datos");
-            System.out.println("b. Imprimir todas las clases");
-            System.out.println("c. Crear un nuevo estudiante y agregarlo a una clase existente");
-            System.out.println("d. Crear una nueva clase");
-            System.out.println("e. Listar todas las clases en las que está incluido un estudiante");
-            System.out.println("f. Salir");
-            System.out.print("Seleccione una opción: ");
-            String option = scanner.nextLine();
+            System.out.println("\n---Menu:");
+            System.out.println("1. Print all professors");
+            System.out.println("2. Print all classes and its data");
+            System.out.println("3. Create a new student and add to class");
+            System.out.println("4. Create a new class");
+            System.out.println("5. List classes for a student");
+            System.out.println("6. Exit");
+            System.out.print("Enter your choice: ");
+            int choice = scanner.nextInt();
 
-            switch (option) {
-                case "a":
-                    // Imprimir todos los profesores
-                    // Código aquí
+            switch (choice) {
+                case 1:
+                    tracker.printProfessors();
                     break;
-                case "b":
-                    // Imprimir todas las clases y submenu
-                    // Código aquí
+                case 2:
+                    tracker.printClasses();
+                    System.out.print("Enter class index: ");
+                    int classIndex = scanner.nextInt();
+                    tracker.printClassData(classIndex - 1);
                     break;
-                case "c":
-                    // Crear un nuevo estudiante y agregarlo a una clase existente
-                    // Código aquí
+                case 3:
+                    tracker.createNewStudent();
                     break;
-                case "d":
-                    // Crear una nueva clase
-                    // Código aquí
+                case 4:
+                    tracker.createNewClass();
                     break;
-                case "e":
-                    // Listar todas las clases en las que está incluido un estudiante
-                    // Código aquí
+                case 5:
+                    System.out.print("Enter student ID: ");
+                    int studentId = scanner.nextInt();
+                    tracker.listClassesForStudent(studentId);
                     break;
-                case "f":
+                case 6:
                     exit = true;
+                    System.out.println("Exiting...");
                     break;
                 default:
-                    System.out.println("Opción inválida. Intente nuevamente.");
+                    System.out.println("Invalid choice. Please select a valid option.");
             }
-
-
         }
-
     }
 }
