@@ -10,7 +10,7 @@ public class App {
         app.runApplication();
     }
     private void printTitle(){
-        System.out.println("<FIRST FINAL PROJECT>\nBy: gsusdavid27");
+        System.out.println("\n<FIRST FINAL PROJECT>\nBy: gsusdavid27");
     }
     private void runApplication(){
         IMain mainClass = new Main();
