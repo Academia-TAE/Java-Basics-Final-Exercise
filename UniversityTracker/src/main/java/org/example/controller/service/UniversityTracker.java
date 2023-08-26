@@ -25,12 +25,12 @@ public class UniversityTracker implements IUniversityTracker {
         teachers.add(new PartTimeTeacher("Michael Johnson", 30, 2, 10));
         teachers.add(new PartTimeTeacher("Emily Brown", 25, 3, 8));
 
-        students.add(new Student("Alice", 1, 20));
-        students.add(new Student("Bob", 2, 21));
-        students.add(new Student("Charlie", 3, 22));
-        students.add(new Student("Diana", 4, 23));
-        students.add(new Student("Eva", 5, 24));
-        students.add(new Student("Frank", 6, 25));
+        students.add(new Student("Alice", 20));
+        students.add(new Student("Bob", 21));
+        students.add(new Student("Charlie", 22));
+        students.add(new Student("Diana", 23));
+        students.add(new Student("Eva", 24));
+        students.add(new Student("Frank", 25));
 
         Subject subject1 = new Subject("Math", "Room 101", teachers.get(0));
         Subject subject2 = new Subject("English", "Room 102", teachers.get(1));
@@ -53,7 +53,7 @@ public class UniversityTracker implements IUniversityTracker {
     public void printProfessors() {
         System.out.println("Professors:");
         for (Teacher teacher : teachers) {
-            System.out.println(teacher.getClass().getSimpleName() + " - " + teacher.getName());
+            System.out.println("    ->"+teacher.getClass().getSimpleName() + " - " + teacher.getName());
         }
     }
 
@@ -69,30 +69,44 @@ public class UniversityTracker implements IUniversityTracker {
     public void printClassData(int classIndex) {
         if (classIndex >= 0 && classIndex < subjects.size()) {
             Subject subject = subjects.get(classIndex);
-            System.out.println("Class: " + subject.getName());
-            System.out.println("Teacher: " + subject.getTeacher().getName());
-            System.out.println("Students:");
+            System.out.println("  -> Class: " + subject.getName());
+            System.out.println("    -> Classroom: " + subject.getClassroom());
+            System.out.println("    -> Teacher: " + subject.getTeacher().getName());
+            System.out.println("    -> Students:");
             for (Student student : subject.getStudents()) {
-                System.out.println(student.getName());
+                System.out.println("        -> "+student.getName());
             }
         }
     }
 
+    /**
+     * TODO: Agregar estudiante a una clase, no solo a la lista de students
+     * Hacer una especie de singleton con un final static para IDs de students.
+     */
     public void createNewStudent() {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter student name: ");
         String name = scanner.nextLine();
-        System.out.print("Enter student ID: ");
-        int id = scanner.nextInt();
         System.out.print("Enter student age: ");
         int age = scanner.nextInt();
-
-        Student newStudent = new Student(name, id, age);
+        Student newStudent = new Student(name, age);
         students.add(newStudent);
+
+        System.out.print("Enter Subject Number to Enroll the Student: ");
+        int subjectNumber = scanner.nextInt();
+
+        for(Subject sbj: subjects){
+            if(subjects.indexOf(sbj)==subjectNumber-1){
+                sbj.enrollStudent(newStudent);
+            }
+        }
 
         System.out.println("Student created and added to the list.");
     }
 
+    /**
+     * TODO: supermejoramiento de la clase
+     */
     public void createNewClass() {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter class name: ");
@@ -118,7 +132,7 @@ public class UniversityTracker implements IUniversityTracker {
             selectedStudents.add(students.get(studentIndex));
         }
 
-        Subject newSubject = new Subject(className, classroom, teachers.get(teacherIndex));
+        Subject newSubject = new Subject(className, classroom, teachers.get(teacherIndex-1));
         for (Student student : selectedStudents) {
             newSubject.enrollStudent(student);
         }
