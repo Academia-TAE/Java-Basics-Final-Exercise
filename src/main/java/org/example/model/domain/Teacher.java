@@ -1,18 +1,26 @@
 package org.example.model.domain;
 
-public class Teacher {
+/**
+ * DONE
+ */
+public abstract class Teacher {
     protected String name;
-    protected double baseSalary;
+    protected double salary;
     protected int experienceYears;
     public Teacher(String name, double baseSalary, int experienceYears) {
         this.name = name;
-        this.baseSalary = baseSalary;
+        this.salary = baseSalary;
         this.experienceYears = experienceYears;
     }
     public double getBaseSalary() {
-        return this.baseSalary;
+        return this.salary;
     }
     public int getExperienceYears() {
-        return experienceYears;
+        return this.experienceYears;
     }
+
+    public String getName() {
+        return name;
+    }
+    public abstract double calculateSalary(); // Método abstracto sin implementación
 }

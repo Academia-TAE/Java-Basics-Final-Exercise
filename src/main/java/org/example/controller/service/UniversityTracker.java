@@ -1,36 +1,159 @@
 package org.example.controller.service;
 
-import org.example.model.domain.Student;
-import org.example.model.domain.Subject;
-import org.example.model.domain.Teacher;
+import org.example.controller.IUniversityTracker;
+import org.example.model.domain.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
-public class UniversityTracker {
-    List<Teacher> teachers = new ArrayList<>();
-    List<Student> students = new ArrayList<>();
-    List<Subject> classes = new ArrayList<>();
-    /*
-    public static void main(String[] args) {
-        List<Teacher> teachers = new ArrayList<>();
-        teachers.add(new FullTimeTeacher("John Doe", 3000, 5));
-        teachers.add(new PartTimeTeacher("Alice Johnson", 25, 15));
 
-        // Initialize students and subjects
+public class UniversityTracker implements IUniversityTracker {
+    private List<Teacher> teachers;
+    private List<Student> students;
+    private List<Subject> subjects;
 
-        // ... (same code as before)
+    public UniversityTracker() {
+        teachers = new ArrayList<>();
+        students = new ArrayList<>();
+        subjects = new ArrayList<>();
+    }
 
-        // Output teacher information and salaries using polymorphism
-        System.out.println("Teacher Information:");
+    public void initializeData() {
+        teachers.add(new FullTimeTeacher("John Doe", 50000, 5));
+        teachers.add(new FullTimeTeacher("Jane Smith", 55000, 8));
+        teachers.add(new PartTimeTeacher("Michael Johnson", 30, 2, 10));
+        teachers.add(new PartTimeTeacher("Emily Brown", 25, 3, 8));
+
+        students.add(new Student("Alice", 20));
+        students.add(new Student("Bob", 21));
+        students.add(new Student("Charlie", 22));
+        students.add(new Student("Diana", 23));
+        students.add(new Student("Eva", 24));
+        students.add(new Student("Frank", 25));
+
+        Subject subject1 = new Subject("Math", "Room 101", teachers.get(0));
+        Subject subject2 = new Subject("English", "Room 102", teachers.get(1));
+        Subject subject3 = new Subject("Science", "Room 103", teachers.get(2));
+        Subject subject4 = new Subject("History", "Room 104", teachers.get(3));
+
+        subject1.enrollStudent(students.get(0));
+        subject1.enrollStudent(students.get(1));
+        subject2.enrollStudent(students.get(2));
+        subject2.enrollStudent(students.get(3));
+        subject3.enrollStudent(students.get(4));
+        subject4.enrollStudent(students.get(5));
+
+        subjects.add(subject1);
+        subjects.add(subject2);
+        subjects.add(subject3);
+        subjects.add(subject4);
+    }
+
+    public void printProfessors() {
+        System.out.println("Professors:");
         for (Teacher teacher : teachers) {
-            System.out.println("Teacher: " + teacher.getName());
-            System.out.println("Salary: $" + teacher.calculateSalary());
+            System.out.println("    ->"+teacher.getClass().getSimpleName() + " - " + teacher.getName());
+        }
+    }
+
+    public void printClasses() {
+        System.out.println("Classes:");
+        int i = 1;
+        for (Subject subject : subjects) {
+            System.out.println(i + ". " + subject.getName());
+            i++;
+        }
+    }
+
+    public void printClassData(int classIndex) {
+        if (classIndex >= 0 && classIndex < subjects.size()) {
+            Subject subject = subjects.get(classIndex);
+            System.out.println("  -> Class: " + subject.getName());
+            System.out.println("    -> Classroom: " + subject.getClassroom());
+            System.out.println("    -> Teacher: " + subject.getTeacher().getName());
+            System.out.println("    -> Students:");
+            for (Student student : subject.getStudents()) {
+                System.out.println("        -> "+student.getName());
+            }
+        }
+    }
+
+    /**
+     * TODO: Agregar estudiante a una clase, no solo a la lista de students
+     * Hacer una especie de singleton con un final static para IDs de students.
+     */
+    public void createNewStudent() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter student name: ");
+        String name = scanner.nextLine();
+        System.out.print("Enter student age: ");
+        int age = scanner.nextInt();
+        Student newStudent = new Student(name, age);
+        students.add(newStudent);
+
+        System.out.print("Enter Subject Number to Enroll the Student: ");
+        int subjectNumber = scanner.nextInt();
+
+        for(Subject sbj: subjects){
+            if(subjects.indexOf(sbj)==subjectNumber-1){
+                sbj.enrollStudent(newStudent);
+            }
         }
 
-        // Output enrolled students in each subject
-        // ... (same code as before)
+        System.out.println("Student created and added to the list.");
     }
-    */
+
+    /**
+     * TODO: supermejoramiento de la clase
+     */
+    public void createNewClass() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter class name: ");
+        String className = scanner.nextLine();
+        System.out.print("Enter classroom: ");
+        String classroom = scanner.nextLine();
+
+        System.out.println("Teachers:");
+        printProfessors();
+        System.out.print("Enter teacher index: ");
+        int teacherIndex = scanner.nextInt();
+
+        System.out.println("Students:");
+        for (int i = 0; i < students.size(); i++) {
+            System.out.println(i + ". " + students.get(i).getName());
+        }
+        System.out.print("Enter student indexes (comma-separated): ");
+        String studentIndexesInput = scanner.next();
+        String[] studentIndexes = studentIndexesInput.split(",");
+        List<Student> selectedStudents = new ArrayList<>();
+        for (String index : studentIndexes) {
+            int studentIndex = Integer.parseInt(index.trim());
+            selectedStudents.add(students.get(studentIndex));
+        }
+
+        Subject newSubject = new Subject(className, classroom, teachers.get(teacherIndex-1));
+        for (Student student : selectedStudents) {
+            newSubject.enrollStudent(student);
+        }
+
+        subjects.add(newSubject);
+
+        System.out.println("Class created and added to the list.");
+    }
+
+    public void listClassesForStudent(int studentId) {
+        System.out.println("Classes for Student with ID " + studentId + ":");
+        for (Subject subject : subjects) {
+            for (Student student : subject.getStudents()) {
+                if (student.getId() == studentId) {
+                    System.out.println(subject.getName());
+                    break;
+                }
+            }
+        }
+    }
+
+
 
 }
