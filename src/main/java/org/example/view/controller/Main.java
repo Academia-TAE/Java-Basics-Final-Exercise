@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 public class Main implements IMain {
     private final IUniversityTracker tracker;
+    private final Scanner scanner = new Scanner(System.in);
 
     public Main() {
         tracker = new UniversityTracker();
@@ -15,27 +16,26 @@ public class Main implements IMain {
 
     @Override
     public void runApplication() {
-        Scanner scanner = new Scanner(System.in);
         boolean exit = false;
         while (!exit) {
             printMenu();
-            int choice = scanner.nextInt();
+            int choice = getUserChoice();
 
             switch (choice) {
                 case 1:
                     tracker.printTeachers();
                     break;
                 case 2:
-                    handlePrintClassesWithDetails(scanner);
+                    handlePrintClassesWithDetails();
                     break;
                 case 3:
-                    tracker.createNewStudent();
+                    handleCreateNewStudent();
                     break;
                 case 4:
-                    tracker.createNewClass();
+                    handleCreateNewClass();
                     break;
                 case 5:
-                    handleListClassesForStudent(scanner);
+                    handleListClassesForStudent();
                     break;
                 case 6:
                     exit = true;
@@ -58,16 +58,88 @@ public class Main implements IMain {
         System.out.print("Enter your choice: ");
     }
 
-    private void handlePrintClassesWithDetails(Scanner scanner) {
+    private int getUserChoice() {
+        return scanner.nextInt();
+    }
+
+    private void handlePrintClassesWithDetails() {
         tracker.printClasses();
         System.out.print("Enter class index: ");
-        int classIndex = scanner.nextInt();
+        int classIndex = getUserChoice();
         tracker.printClassData(classIndex - 1);
     }
 
-    private void handleListClassesForStudent(Scanner scanner) {
+    private void handleListClassesForStudent() {
         System.out.print("Enter student ID: ");
-        int studentId = scanner.nextInt();
+        int studentId = getUserChoice();
         tracker.listClassesForStudent(studentId);
+    }
+
+    private String askForName(String entity) {
+        System.out.print("Enter " + entity + " name: ");
+        return scanner.nextLine();
+    }
+
+    private int askForAge() {
+        while (true) {
+            System.out.print("Enter age: ");
+            try {
+                return Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a valid integer.");
+            }
+        }
+    }
+
+    private int askForNumber(String entity) {
+        tracker.printClasses();
+        while (true) {
+            System.out.print("Enter " + entity + " Subject number: ");
+            try {
+                return Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a valid integer.");
+            }
+        }
+    }
+
+    private void handleCreateNewStudent() {
+        scanner.nextLine();
+        String name = askForName("student");
+        int age = askForAge();
+        int number = askForNumber("student");
+
+        tracker.createNewStudent(name, age, number);
+    }
+
+
+    private void handleCreateNewClass() {
+        scanner.nextLine();
+        tracker.createNewClass(
+                enterInfo("class name"),
+                enterInfo("classroom"),
+                selectTeacherIndex(),
+                enterStudentIndexesInput()
+        );
+    }
+
+    private String enterInfo(String infoType) {
+        System.out.print("Enter " + infoType + ": ");
+        return scanner.nextLine();
+    }
+
+    private int selectTeacherIndex() {
+        System.out.println("Teachers:");
+        tracker.printTeachers();
+        System.out.print("Enter teacher index: ");
+        return getUserChoice();
+    }
+
+    private String enterStudentIndexesInput() {
+        scanner.nextLine();
+        System.out.println("Students:");
+        tracker.printStudents();
+        System.out.print("Enter student IDs (comma-separated): ");
+        return scanner.nextLine();
     }
 }

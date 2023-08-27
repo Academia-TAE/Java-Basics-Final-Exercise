@@ -1,5 +1,9 @@
 package org.example.controller;
 
+import org.example.model.domain.Student;
+
+import java.util.List;
+
 public interface IUniversityTracker {
 
     void printTeachers();
@@ -8,9 +12,11 @@ public interface IUniversityTracker {
 
     void printClassData(int i);
 
-    void createNewStudent();
+    void createNewStudent(String name, int age, int sbj);
 
-    void createNewClass();
+    void createNewClass(String className, String classroom, int teacherIndex, String studentIndexesInput);
 
     void listClassesForStudent(int studentId);
+
+    void printStudents();
 }
