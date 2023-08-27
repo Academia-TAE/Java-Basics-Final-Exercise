@@ -4,15 +4,15 @@ public interface IUniversityTracker {
 
     void printTeachers();
 
-    void printClasses();
+    void printSubjects();
 
-    void printClassData(int i);
+    void printSubjectData(int i);
 
     void createNewStudent(String name, int age, int sbj);
 
-    void createNewClass(String className, String classroom, int teacherIndex, String studentIndexesInput);
+    void createNewSubject(String subjectName, String classroom, int teacherIndex, String studentIndexesInput);
 
-    void listClassesForStudent(int studentId);
+    void listSubjectsForStudent(int studentId);
 
     void printStudents();
 }
