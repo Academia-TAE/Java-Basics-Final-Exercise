@@ -5,23 +5,29 @@ import org.example.model.IRepositoryInitializer;
 import org.example.model.domain.*;
 import org.example.model.repository.RepositoryInitializer;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class UniversityTracker implements IUniversityTracker {
-    private IRepositoryInitializer repository;
-    private List<Teacher> teachers;
-    private List<Student> students;
-    private List<Subject> subjects;
+    private final List<Teacher> teachers;
+    private final List<Student> students;
+    private final List<Subject> subjects;
 
     public UniversityTracker() {
-        repository = new RepositoryInitializer();
+        IRepositoryInitializer repository = new RepositoryInitializer();
         teachers = repository.getStoragedTeachers();
         students = repository.getStoragedStudents();
         subjects = repository.getStoragedSubjects();
+    }
+
+    public static IUniversityTracker getInstance() {
+        return Holder.INSTANCE;
+    }
+
+    private static class Holder {
+        private static final IUniversityTracker INSTANCE = new UniversityTracker();
     }
 
     @Override
@@ -61,18 +67,43 @@ public class UniversityTracker implements IUniversityTracker {
     @Override
     public void createNewClass(String className, String classroom, int teacherIndex, String studentIndexesInput) {
         String[] studentIndexes = studentIndexesInput.split(",");
-        List<Student> selectedStudents = new ArrayList<>();
-        for (String index : studentIndexes) {
-            int studentIndex = Integer.parseInt(index.trim());
-            selectedStudents.add(students.get(studentIndex));
+
+        List<Integer> selectedIndexes = getSelectedStudentIndexes(studentIndexes);
+
+        if (!validateSelectedIndexes(selectedIndexes)) {
+            System.out.println("Subject not created->Invalid or duplicate student indexes.");
+            return;
         }
 
-        Subject newSubject = new Subject(className, classroom, teachers.get(teacherIndex-1));
-        for (Student student : selectedStudents) {
-            newSubject.enrollStudent(student);
-        }
+        Teacher teacher = getTeacher(teacherIndex);
+        Subject newSubject = createSubject(className, classroom, teacher);
+
+        enrollStudents(newSubject, selectedIndexes);
+
         subjects.add(newSubject);
         System.out.println("Class created and added to the list.");
+    }
+
+    private List<Integer> getSelectedStudentIndexes(String[] studentIndexes) {
+        return Arrays.stream(studentIndexes)
+                .map(String::trim)
+                .mapToInt(Integer::parseInt)
+                .filter(index -> index >= 0 && index < students.size())
+                .boxed()
+                .collect(Collectors.toList());
+    }
+
+    private boolean validateSelectedIndexes(List<Integer> selectedIndexes) {
+        Set<Integer> selectedIndexesSet = new HashSet<>(selectedIndexes);
+        return selectedIndexes.size() == selectedIndexesSet.size();
+    }
+
+    private Teacher getTeacher(int teacherIndex) {
+        return teachers.get(teacherIndex - 1);
+    }
+
+    private Subject createSubject(String className, String classroom, Teacher teacher) {
+        return new Subject(className, classroom, teacher);
     }
 
     @Override
@@ -82,6 +113,14 @@ public class UniversityTracker implements IUniversityTracker {
                 .filter(subject -> subject.getStudents().stream()
                         .anyMatch(student -> student.getId() == studentId))
                 .forEach(subject -> System.out.println(subject.getName()));
+    }
+
+    private void enrollStudents(Subject subject, List<Integer> selectedIndexes) {
+        List<Student> selectedStudents = selectedIndexes.stream()
+                .map(students::get)
+                .collect(Collectors.toList());
+
+        selectedStudents.forEach(subject::enrollStudent);
     }
 
     private void enrollStudentInSubject(Student student, int subjectNumber) {

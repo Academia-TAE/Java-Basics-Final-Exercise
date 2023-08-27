@@ -1,7 +1,7 @@
 package org.example;
 
-import org.example.view.IMain;
-import org.example.view.controller.Main;
+import org.example.view.IMainMenu;
+import org.example.view.receiver.MainMenu;
 
 public class App {
     public static void main(String[] args) {
@@ -10,7 +10,7 @@ public class App {
     }
 
     private void runApplication(){
-        IMain mainClass = new Main();
+        IMainMenu mainClass = new MainMenu();
         printTitle();
         mainClass.runApplication();
     }

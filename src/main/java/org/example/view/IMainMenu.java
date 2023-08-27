@@ -1,5 +1,5 @@
 package org.example.view;
 
-public interface IMain {
+public interface IMainMenu {
     void runApplication();
 }

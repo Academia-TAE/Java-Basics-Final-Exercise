@@ -9,7 +9,7 @@ public class Student {
     public Student(String name, int age) {
         this.name = name;
         this.age = age;
-        this.id = this.singleID++;
+        this.id = singleID++;
     }
 
     public String getName() {

@@ -24,14 +24,6 @@ public class Subject {
         return name;
     }
 
-    public String getClassroom() {
-        return classroom;
-    }
-
-    public Teacher getTeacher() {
-        return teacher;
-    }
-
     public List<Student> getStudents() {
         return students;
     }

@@ -1,8 +1,5 @@
 package org.example.model.domain;
 
-/**
- * DONE
- */
 public abstract class Teacher {
     protected String name;
     protected double salary;
